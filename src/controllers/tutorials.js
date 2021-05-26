@@ -5,7 +5,7 @@ const validator = require('../validators/validateTutoriales')
 //listo
 
 controller.saveTutorial = async (req, res) => {
-  const name = req.body.name
+  const title = req.body.title
   const description = req.body.description
   const tags = req.body.tags
   const link = req.body.link
@@ -18,10 +18,10 @@ controller.saveTutorial = async (req, res) => {
     res.status(400).send(error)
     return
   } else {
-    if (name && description && tags && link) {
+    if (title && description && tags && link) {
       try {
         const tutorial = new Tutorial({
-          name: name,
+          title: title,
           description: description,
           tags: tags,
           link: link
