@@ -3,6 +3,7 @@ const SchemaMongo = mongoose.Schema
 
 const Tip = new SchemaMongo({
     title: String,
+    link: String,
     description: String,
     tasgs: {
       type: String,

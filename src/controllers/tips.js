@@ -5,9 +5,10 @@ const Tip = require('../models/tip.model')
 //listos
 
 controller.saveTip = async (req, res) => {
-  let title = req.body.title
-  let description = req.body.description
-  let tags = req.body.tags
+  const title = req.body.title
+  const description = req.body.description
+  const tags = req.body.tags
+  const link = req.body.link
 
   const validation = validator.validate(req.body)
 
@@ -17,12 +18,13 @@ controller.saveTip = async (req, res) => {
     res.status(400).send(error)
     return
   } else {
-    if (title && description && tags) {
+    if (title && description && tags && link) {
       try {
         const tip = new Tip({
           title: title,
           description: description,
           tags: tags,
+          link: link
         })
         await tip.save()
         res.status(204).send()
@@ -78,6 +80,7 @@ controller.updateTip = async (req, res) => {
   const title = req.body.title
   const description = req.body.description
   const tags = req.body.tags
+  const link = req.body.link
   const TipId = req.params.id
 
   const validation = validator.validate(req.body)
@@ -94,6 +97,7 @@ controller.updateTip = async (req, res) => {
           title: title,
           description: description,
           tags: tags,
+          link: link,
           updatedAt: Date.now(),
         })
         res.status(204).send()

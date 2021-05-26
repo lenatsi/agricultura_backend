@@ -4,6 +4,7 @@ const SchemaMongo = mongoose.Schema
 const Tutorial = new SchemaMongo({
   title: String,
   description: String,
+  link: String,
   tags: {
     type: String,
     enum: [

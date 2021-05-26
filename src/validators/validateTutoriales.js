@@ -1,6 +1,7 @@
 const Joi = require('joi')
 const schema = Joi.object({
   title: Joi.string().required(),
+  link: Joi.string().required(),
   description: Joi.string().required(),
   tags: Joi.string()
     .required()
@@ -31,6 +32,7 @@ function validate(body) {
       title: body.title,
       description: body.description,
       tags: body.tags,
+      link: body.link
     },
     { abortEarly: false },
   )

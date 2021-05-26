@@ -8,6 +8,7 @@ controller.saveTutorial = async (req, res) => {
   const name = req.body.name
   const description = req.body.description
   const tags = req.body.tags
+  const link = req.body.link
 
   const validation = validator.validate(req.body)
 
@@ -17,12 +18,13 @@ controller.saveTutorial = async (req, res) => {
     res.status(400).send(error)
     return
   } else {
-    if (name && description && tags) {
+    if (name && description && tags && link) {
       try {
         const tutorial = new Tutorial({
           name: name,
           description: description,
           tags: tags,
+          link: link
         })
         await tutorial.save()
         res.status(204).send()
@@ -78,6 +80,7 @@ controller.updateTutorial = async (req, res) => {
   const name = req.body.name
   const description = req.body.description
   const tags = req.body.tags
+  const link = req.body.link
   const tutorialId = req.params.id
 
   const validation = validator.validate(req.body)
@@ -94,6 +97,7 @@ controller.updateTutorial = async (req, res) => {
           name: name,
           description: description,
           tags: tags,
+          link: link,
           updatedAt: Date.now(),
         })
         res.status(204).send()
