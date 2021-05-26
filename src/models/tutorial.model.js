@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
 const SchemaMongo = mongoose.Schema
 
 const Tutorial = new SchemaMongo({
   title: String,
   description: String,
-  tasgs: {
+  tags: {
     type: String,
     enum: [
       'Cosecha',

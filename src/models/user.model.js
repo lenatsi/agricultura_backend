@@ -1,14 +1,14 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-const SchemaMongo = mongoose.Schema
+const Schema = mongoose.Schema
 
-const User = new SchemaMongo({
+const User = new Schema({
     name: { type: String, require: true},
     email: { type: String, require: true, unique: true },
     password: { type: String, require: true},
     plants: [{ type: Schema.Types.ObjectId, ref: 'plant' }],
-    todo: { type: Array},
-    //ground: { type: Schema.Types.ObjectId, ref: 'ground' },
+    todo: [{ type: Schema.Types.ObjectId, ref: 'todo' }],
+    ground: { type: Schema.Types.ObjectId, ref: 'ground' },
 })
 User.pre('save', async function (next) {
     try {

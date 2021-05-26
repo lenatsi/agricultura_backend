@@ -6,22 +6,30 @@ const Plant = require('../models/plant.model')
 controller.feedCalendar = async (req, res) => {
   const user = req.user
     try{
-        const data = await user.populate('plants')
+        const data = await user.populate('plants').populate(
+          {
+            path: "plants",
+            populate: {
+              path: 'calendar',
+              model: 'calendar'
+            }
+          }
+        )
+        res.json(data)
+    }catch(error){
+      res.status(400).send(error)
     }
-
-
 }
 
 controller.saveCalendar = async (req, res) => {
-  const plant = req.body.plant
   const seedtime = req.body.seedtime
   const plantation = req.body.plantation
   const harvest = req.body.harvest
 
   if (plant && seedtime && plantation && harvest) {
     try {
+
       const calendar = new Calendar({
-        plant: plant,
         seedtime: seedtime,
         plantation: plantation,
         harvest: harvest,

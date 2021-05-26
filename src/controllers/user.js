@@ -2,7 +2,6 @@ const controller = {}
 const User = require('../models/user.model')
 const authJWT = require('../auth/jwt')
 const validator = require('../validators/validator')
-const config = require('../config')
 
 controller.signup = async (req, res) => {
     const email = req.body.email
@@ -36,8 +35,7 @@ controller.signup = async (req, res) => {
         res.status(500).send(err.message)
       }
     }
-  }
-  
+  } 
 controller.login = async (req, res) => {
     const email = req.body.email
     const password = req.body.password
@@ -70,6 +68,8 @@ controller.login = async (req, res) => {
       return
     }
   }
+
+//formulario
   
 
 

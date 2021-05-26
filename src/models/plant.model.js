@@ -8,6 +8,7 @@ const Plant = new SchemaMongo({
     plantationTip: {type: String},
     info: {type: String},
     tip: {type: String},
+    calendar: {type: SchemaMongo.Types.ObjectId, ref: 'calendar'},
     savedAt: { type: Date, default: Date.now },
     udatedAt: { type: Date, default: Date.now },
 })

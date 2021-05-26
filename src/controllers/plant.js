@@ -1,6 +1,7 @@
 const controller = {}
 const Plant = require('../models/plant.model')
 const validator = require('../validators/validateplants')
+
 //listos
 
 controller.savePlant = async (req, res) => {
@@ -8,6 +9,7 @@ controller.savePlant = async (req, res) => {
   let irriagation = req.body.irriagation
   let light = req.body.light
   let plantationTip = req.body.plantationTip
+  let calendar = req.body.calendar
   let info = req.body.info
   let tip = req.body.tip
 
@@ -15,20 +17,27 @@ controller.savePlant = async (req, res) => {
 
   if (validation.error) {
     const error = validation.error.details[0].message
-    console.log(error)
     res.status(400).send(error)
     return
   } else {
-    if (name && irriagation && light && plantationTip && info && tip) {
+    if (
+      name &&
+      irriagation &&
+      light &&
+      plantationTip &&
+      info &&
+      tip &&
+      calendar
+    ) {
       try {
         const plant = new Plant({
           name: name,
           irriagation: irriagation,
           light: light,
-          plantationTip:plantationTip,
-          info:info,
-          tip:tip
-
+          plantationTip: plantationTip,
+          calendar: calendar,
+          info: info,
+          tip: tip,
         })
         await plant.save()
         res.status(204).send()
@@ -77,9 +86,9 @@ controller.updatePlant = async (req, res) => {
           name: name,
           irrigation: irrigation,
           light: light,
-          plantationTip:plantationTip,
-          info:info,
-          tip:tip,
+          plantationTip: plantationTip,
+          info: info,
+          tip: tip,
           updatedAt: Date.now(),
         })
         res.status(204).send()

@@ -1,5 +1,5 @@
 const controller = {}
-
+const validator = require('../validators/validateTutoriales')
 const Tip = require('../models/tip.model')
 
 //listos
@@ -38,8 +38,8 @@ controller.getTip = async (req, res) => {
   const id = req.params.id
   if (id) {
     try {
-      const tips = await Tip.findById(id)
-      res.json(tips)
+      const tip = await Tip.findById(id)
+      res.json(tip)
     } catch (err) {
       res.status(500).send(err)
     }
@@ -49,55 +49,30 @@ controller.getTip = async (req, res) => {
 }
 controller.getTips = async (req, res) => {
   const filter = req.query.filter
-  console.log(filter)
+  const tags = req.query.tags
   const filters = []
   if (filter) {
     filters.push({ title: new RegExp(filter, 'i') })
   }
-  
+  if (tags) {
+    filters.push({ tags: new RegExp(filter, 'i') })
+  }
   try {
-    let profiles = {}
+    let tips = {}
     if (filters.length > 0) {
-      profiles = await Tip.aggregate([
-        //{ $addFields: { fullname: { $concat: ['$name', ' ', '$surname'] } } },
+      tips = await Tip.aggregate([
         {
           $match: { $and: filters },
         },
       ])
     } else {
-      profiles = await Tip.find()
+      tips = await Tip.find()
     }
-    res.send(profiles)
+    res.send(tips)
   } catch (error) {
     console.log(error)
-    res.status(500).send('ocurrió un error')
+    res.status(500).send('Ocurrió un error')
   }
-  /* let query ={}
-    
-    if (filter || (startDate && endDate)) {
-      query.$or =[]
-    }
-    
-    if (filter) {
-      query.$or.push({ surname: new RegExp(filter, 'i') })
-    }
-    
-    if (startDate && endDate) {
-      query.$or.push({
-        birthDate:{
-          $gte: startDate,
-            $lte: endDate,
-        }
-      })
-    }
-    
-    try {
-      const Tip = await Tip.find(query)
-      res.send(Tip)
-    }catch (error){
-      console.log(error)
-      res.status(500).send('Error al enviar datos')
-    } */
 }
 controller.updateTip = async (req, res) => {
   const title = req.body.title
@@ -143,7 +118,5 @@ controller.deleteTip = async (req, res) => {
     res.status(400).send()
   }
 }
-
-
 
 module.exports = controller

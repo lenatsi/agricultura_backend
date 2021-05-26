@@ -1,10 +1,13 @@
 const controller = {}
 const Tutorial = require('../models/tutorial.model')
+const validator = require('../validators/validateTutoriales')
 
-//revisar
+//listo
 
 controller.saveTutorial = async (req, res) => {
-  let name = req.body.name
+  const name = req.body.name
+  const description = req.body.description
+  const tags = req.body.tags
 
   const validation = validator.validate(req.body)
 
@@ -14,10 +17,12 @@ controller.saveTutorial = async (req, res) => {
     res.status(400).send(error)
     return
   } else {
-    if (name) {
+    if (name && description && tags) {
       try {
         const tutorial = new Tutorial({
           name: name,
+          description: description,
+          tags: tags,
         })
         await tutorial.save()
         res.status(204).send()
@@ -44,73 +49,35 @@ controller.getTutorial = async (req, res) => {
 }
 controller.getTutorials = async (req, res) => {
   const filter = req.query.filter
-  const startDate = req.query.startDate
-  const endDate = req.query.endDate
-  console.log(filter)
-  console.log(startDate)
+  const tags = req.query.tags
   const filters = []
   if (filter) {
-    filters.push({ fullname: new RegExp(filter, 'i') })
+    filters.push({ title: new RegExp(filter, 'i') })
   }
-  if (startDate && endDate) {
-    filters.push({
-      birthDate: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
-      },
-    })
+  if (tags) {
+    filters.push({ tags: new RegExp(filter, 'i') })
   }
   try {
-    let profiles = {}
+    let tutoriales = {}
     if (filters.length > 0) {
-      profiles = await Tutorial.aggregate([
-        { $addFields: { fullname: { $concat: ['$name', ' ', '$surname'] } } },
+      tutoriales = await Tutorial.aggregate([
         {
           $match: { $and: filters },
         },
       ])
     } else {
-      profiles = await Tutorial.find()
+      tutoriales = await Tutorial.find()
     }
-    res.send(profiles)
+    res.send(tutoriales)
   } catch (error) {
     console.log(error)
     res.status(500).send('ocurrió un error')
   }
-  /* let query ={}
-    
-    if (filter || (startDate && endDate)) {
-      query.$or =[]
-    }
-    
-    if (filter) {
-      query.$or.push({ surname: new RegExp(filter, 'i') })
-    }
-    
-    if (startDate && endDate) {
-      query.$or.push({
-        birthDate:{
-          $gte: startDate,
-            $lte: endDate,
-        }
-      })
-    }
-    
-    try {
-      const Tutorial = await Tutorial.find(query)
-      res.send(Tutorial)
-    }catch (error){
-      console.log(error)
-      res.status(500).send('Error al enviar datos')
-    } */
 }
 controller.updateTutorial = async (req, res) => {
   const name = req.body.name
-  const surname = req.body.surname
-  const birthDate = req.body.birthDate
-  const bio = req.body.bio
-  const profession = req.body.profession
-  const photo = req.body.photo
+  const description = req.body.description
+  const tags = req.body.tags
   const tutorialId = req.params.id
 
   const validation = validator.validate(req.body)
@@ -125,11 +92,8 @@ controller.updateTutorial = async (req, res) => {
       try {
         await Tutorial.findByIdAndUpdate(tutorialId, {
           name: name,
-          surname: surname,
-          birthDate: birthDate,
-          bio: bio,
-          profession: profession,
-          photo: photo,
+          description: description,
+          tags: tags,
           updatedAt: Date.now(),
         })
         res.status(204).send()

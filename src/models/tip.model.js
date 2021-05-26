@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
 const SchemaMongo = mongoose.Schema
 
 const Tip = new SchemaMongo({
